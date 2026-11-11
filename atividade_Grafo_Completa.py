@@ -179,6 +179,62 @@ direcional = int(input(
     "O grafo é direcional?\n1. Sim\n2. Não\n"
 )) == 1
 
+
+
+def menor_caminho(grafo: dict, inicio: str, destino: str):
+
+    # Verifica se os vértices existem
+    if inicio not in grafo["vertices"]:
+        print("Vértice inicial não existe.")
+        return
+
+    if destino not in grafo["vertices"]:
+        print("Vértice de destino não existe.")
+        return
+
+    # Estruturas utilizadas pelo BFS
+    fila = [inicio]
+    visitados = [inicio]
+
+    # Guarda o antecessor de cada vértice
+    caminhos = {inicio: None}
+
+    while fila:
+
+        vertice = fila.pop(0)
+
+        # Verifica se encontramos o destino
+        if vertice == destino:
+
+            caminho = []
+            atual = destino
+
+            # Reconstrói o caminho
+            while atual is not None:
+                caminho.append(atual)
+                atual = caminhos[atual]
+
+            caminho.reverse()
+
+            print("Menor caminho:", " -> ".join(caminho))
+            print("Quantidade de arestas:", len(caminho) - 1)
+
+            return caminho
+
+        # Obtém os vizinhos do vértice atual
+        for vizinho in obterVizinhos(grafo, vertice, direcional):
+
+            if vizinho not in visitados:
+
+                visitados.append(vizinho)
+                fila.append(vizinho)
+
+                caminhos[vizinho] = vertice
+
+    print("Não existe caminho entre esses vértices.")
+    return None
+
+
 while True:
     try:
         opc = int(input(
@@ -192,6 +248,7 @@ while True:
             "7. Listar vizinhos\n"
             "8. Verificar percurso\n"
             "9. Exibir grafo\n"
+            "10. Menor caminho de um vértice para outro\n"
             "0. Sair\n"
         ))
     except ValueError:
@@ -252,6 +309,12 @@ while True:
 
         case 9:
             exibirgrafo(grafo)
+        
+        case 10:
+            print("Vértices disponíveis:", list(grafo.keys()))
+            inicio = input("Insira o vertice inicial: ")
+            destino = input("insira o vertice de destino: ")
+            menor_caminho(grafo, inicio, destino)
 
         case _:
             print("Opção inválida.")
