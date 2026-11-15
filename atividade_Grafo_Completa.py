@@ -234,7 +234,7 @@ def menor_caminho(grafo: dict, inicio: str, destino: str):
     print("Não existe caminho entre esses vértices.")
     return None
 
-    def busca_largura(grafo: dict, inicio: str):
+def busca_largura(grafo: dict, inicio: str):
 
     if inicio not in grafo["vertices"]:
         print("Vértice inicial não existe.")
