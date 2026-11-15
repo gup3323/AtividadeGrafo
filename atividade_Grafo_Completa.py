@@ -234,6 +234,30 @@ def menor_caminho(grafo: dict, inicio: str, destino: str):
     print("Não existe caminho entre esses vértices.")
     return None
 
+    def busca_largura(grafo: dict, inicio: str):
+
+    if inicio not in grafo["vertices"]:
+        print("Vértice inicial não existe.")
+        return
+
+    fila = [inicio]
+    visitados = []
+
+    while fila:
+
+        vertice = fila.pop(0)
+
+        if vertice not in visitados:
+            visitados.append(vertice)
+
+            for vizinho in obterVizinhos(grafo, vertice, direcional):
+
+                if vizinho not in fila and vizinho not in visitados:
+                    fila.append(vizinho)
+
+    print("Ordem de visita:", visitados)
+    return visitados
+
 
 while True:
     try:
@@ -249,6 +273,7 @@ while True:
             "8. Verificar percurso\n"
             "9. Exibir grafo\n"
             "10. Menor caminho de um vértice para outro\n"
+            "11. Busca em largura\n"
             "0. Sair\n"
         ))
     except ValueError:
@@ -315,6 +340,11 @@ while True:
             inicio = input("Insira o vertice inicial: ")
             destino = input("insira o vertice de destino: ")
             menor_caminho(grafo, inicio, destino)
+
+        case 11:
+            print("Vértices disponíveis:", grafo["vertices"])
+            inicio = input("Insira o vértice inicial: ")
+            busca_largura(grafo, inicio)
 
         case _:
             print("Opção inválida.")
