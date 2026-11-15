@@ -183,7 +183,6 @@ direcional = int(input(
 
 def menor_caminho(grafo: dict, inicio: str, destino: str):
 
-    # Verifica se os vértices existem
     if inicio not in grafo["vertices"]:
         print("Vértice inicial não existe.")
         return
@@ -192,24 +191,20 @@ def menor_caminho(grafo: dict, inicio: str, destino: str):
         print("Vértice de destino não existe.")
         return
 
-    # Estruturas utilizadas pelo BFS
     fila = [inicio]
     visitados = [inicio]
 
-    # Guarda o antecessor de cada vértice
     caminhos = {inicio: None}
 
     while fila:
 
         vertice = fila.pop(0)
 
-        # Verifica se encontramos o destino
         if vertice == destino:
 
             caminho = []
             atual = destino
 
-            # Reconstrói o caminho
             while atual is not None:
                 caminho.append(atual)
                 atual = caminhos[atual]
@@ -221,7 +216,6 @@ def menor_caminho(grafo: dict, inicio: str, destino: str):
 
             return caminho
 
-        # Obtém os vizinhos do vértice atual
         for vizinho in obterVizinhos(grafo, vertice, direcional):
 
             if vizinho not in visitados:
