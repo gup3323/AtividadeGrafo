@@ -1,3 +1,9 @@
+# Participantes: Lucas Macedo Dos Santos | RA 2019229
+# Juan Ferreira Honória Pedroza | RA 2032428
+# João Celso da Silva Nogueira dos santos | RA 2031553
+# Raissa Kaori Kawakami | RA 2040357
+
+
 def inserirVertice(grafo: dict, vertice: str):
     if vertice in grafo["vertices"]:
         print("Vértice já existe.")
@@ -253,6 +259,27 @@ def busca_largura(grafo: dict, inicio: str):
     return visitados
 
 
+def encontraCiclos(grafo: dict):
+    visitados = []
+
+    for inicio in grafo["vertices"]:
+        if inicio not in visitados:
+            fila = [(inicio, None)]
+
+            while fila:
+                vertice, pai = fila.pop(0)
+
+                if vertice not in visitados:
+                    visitados.append(vertice)
+
+                    for vizinho in obterVizinhos(grafo, vertice, False):
+
+                        if vizinho not in visitados:
+                            fila.append((vizinho, vertice))
+
+                        elif vizinho != pai:
+                            print("Temos um ciclo")
+
 while True:
     try:
         opc = int(input(
@@ -339,6 +366,8 @@ while True:
             print("Vértices disponíveis:", grafo["vertices"])
             inicio = input("Insira o vértice inicial: ")
             busca_largura(grafo, inicio)
+        case 12:    
+            encontraCiclos(grafo)
 
         case _:
             print("Opção inválida.")
