@@ -280,6 +280,31 @@ def encontraCiclos(grafo: dict):
                         elif vizinho != pai:
                             print("Temos um ciclo")
 
+
+def busca_profundidade(grafo: dict, inicio: str):
+
+    if inicio not in grafo["vertices"]:
+        print("Vértice inicial não existe.")
+        return
+
+    pilha = [inicio]
+    visitados = []
+
+    while pilha:
+        vertice = pilha.pop()
+
+        if vertice not in visitados:
+            visitados.append(vertice)
+
+            for vizinho in obterVizinhos(grafo, vertice, direcional):
+
+                if vizinho not in pilha and vizinho not in visitados:
+                    pilha.append(vizinho)
+
+    print("Ordem de visita:", visitados)
+    return visitados
+
+
 while True:
     try:
         opc = int(input(
@@ -295,6 +320,8 @@ while True:
             "9. Exibir grafo\n"
             "10. Menor caminho de um vértice para outro\n"
             "11. Busca em largura\n"
+            "12. Encontrar Ciclos\n"
+            "13. Busca em profundidade\n"
             "0. Sair\n"
         ))
     except ValueError:
@@ -368,6 +395,9 @@ while True:
             busca_largura(grafo, inicio)
         case 12:    
             encontraCiclos(grafo)
-
+        case 13:
+            print("Vértices disponíveis:", grafo["vertices"])
+            inicio = input("Insira o vértice inicial: ")
+            busca_profundidade(grafo, inicio)
         case _:
             print("Opção inválida.")
