@@ -280,9 +280,7 @@ def encontraCiclos(grafo: dict):
                         elif vizinho != pai:
                             print("Temos um ciclo")
 
-
 def busca_profundidade(grafo: dict, inicio: str):
-
     if inicio not in grafo["vertices"]:
         print("Vértice inicial não existe.")
         return
@@ -304,6 +302,50 @@ def busca_profundidade(grafo: dict, inicio: str):
     print("Ordem de visita:", visitados)
     return visitados
 
+def encontra_ciclos_dfs(grafo: dict, direcional: bool):
+    if direcional:
+        estado = {v: 0 for v in grafo["vertices"]}
+
+        def dfs_dir(vertice):
+            estado[vertice] = 1
+            for vizinho in obterVizinhos(grafo, vertice, True):
+                if estado[vizinho] == 1:
+                    return True
+                if estado[vizinho] == 0 and dfs_dir(vizinho):
+                    return True
+            estado[vertice] = 2
+            return False
+
+        for v in grafo["vertices"]:
+            if estado[v] == 0:
+                if dfs_dir(v):
+                    print("O grafo possui ciclo.")
+                    return True
+
+        print("O grafo não possui ciclo.")
+        return False
+
+    else:
+        visitados = []
+
+        def dfs_nao_dir(vertice, pai):
+            visitados.append(vertice)
+            for vizinho in obterVizinhos(grafo, vertice, False):
+                if vizinho not in visitados:
+                    if dfs_nao_dir(vizinho, vertice):
+                        return True
+                elif vizinho != pai:
+                    return True
+            return False
+
+        for v in grafo["vertices"]:
+            if v not in visitados:
+                if dfs_nao_dir(v, None):
+                    print("O grafo possui ciclo.")
+                    return True
+
+        print("O grafo não possui ciclo.")
+        return False
 
 while True:
     try:
@@ -320,8 +362,9 @@ while True:
             "9. Exibir grafo\n"
             "10. Menor caminho de um vértice para outro\n"
             "11. Busca em largura\n"
-            "12. Encontrar Ciclos\n"
+            "12. Verificar se o grafo possui ciclos\n"
             "13. Busca em profundidade\n"
+            "14. Verificar se o grafo possui ciclos usando DFS\n"
             "0. Sair\n"
         ))
     except ValueError:
@@ -393,11 +436,17 @@ while True:
             print("Vértices disponíveis:", grafo["vertices"])
             inicio = input("Insira o vértice inicial: ")
             busca_largura(grafo, inicio)
+        
         case 12:    
             encontraCiclos(grafo)
+            
         case 13:
             print("Vértices disponíveis:", grafo["vertices"])
             inicio = input("Insira o vértice inicial: ")
-            busca_profundidade(grafo, inicio)
+            busca_profundidade(grafo, inicio, direcional)
+
+        case 14:
+            encontra_ciclos_dfs(grafo, direcional)
+
         case _:
             print("Opção inválida.")
