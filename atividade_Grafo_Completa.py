@@ -347,6 +347,65 @@ def encontra_ciclos_dfs(grafo: dict, direcional: bool):
         print("O grafo não possui ciclo.")
         return False
 
+def obterPeso(grafo: dict, origem: str, destino: str, direcional: bool):
+    for origem_aresta, destino_aresta, peso in grafo["arestas"]:
+        if origem_aresta == origem and destino_aresta == destino:
+            return peso
+        if not direcional and origem_aresta == destino and destino_aresta == origem:
+            return peso
+    return None
+
+
+def dijkstra(grafo: dict, inicio: str, destino: str, direcional: bool):
+    if inicio not in grafo["vertices"]:
+        print("Vértice inicial não existe.")
+        return None
+
+    if destino not in grafo["vertices"]:
+        print("Vértice de destino não existe.")
+        return None
+
+    distancias = {vertice: float("inf") for vertice in grafo["vertices"]}
+    anteriores = {vertice: None for vertice in grafo["vertices"]}
+    nao_visitados = grafo["vertices"].copy()
+    distancias[inicio] = 0
+
+    while nao_visitados:
+        atual = min(nao_visitados, key=lambda vertice: distancias[vertice])
+
+        if distancias[atual] == float("inf"):
+            break
+
+        nao_visitados.remove(atual)
+
+        if atual == destino:
+            break
+
+        for vizinho in obterVizinhos(grafo, atual, direcional):
+            if vizinho in nao_visitados:
+                peso = obterPeso(grafo, atual, vizinho, direcional)
+                nova_distancia = distancias[atual] + peso
+
+                if nova_distancia < distancias[vizinho]:
+                    distancias[vizinho] = nova_distancia
+                    anteriores[vizinho] = atual
+
+    if distancias[destino] == float("inf"):
+        print("Não existe caminho entre esses vértices.")
+        return None
+
+    caminho = []
+    atual = destino
+    while atual is not None:
+        caminho.append(atual)
+        atual = anteriores[atual]
+
+    caminho.reverse()
+    print("Menor caminho:", " -> ".join(caminho))
+    print("Custo total:", distancias[destino])
+    return caminho, distancias[destino]
+
+
 while True:
     try:
         opc = int(input(
@@ -365,6 +424,7 @@ while True:
             "12. Verificar se o grafo possui ciclos\n"
             "13. Busca em profundidade\n"
             "14. Verificar se o grafo possui ciclos usando DFS\n"
+            "15. Menor caminho usando Dijkstra\n"
             "0. Sair\n"
         ))
     except ValueError:
@@ -448,5 +508,10 @@ while True:
         case 14:
             encontra_ciclos_dfs(grafo, direcional)
 
+        case 15:
+            print("Vértices disponíveis:", grafo["vertices"])
+            inicio = input("Vértice inicial: ")
+            destino = input("Vértice de destino: ")
+            dijkstra(grafo, inicio, destino, direcional)
         case _:
             print("Opção inválida.")
